@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Runtime.Caching;
 using log4net.Config;
 using System.Reflection;
+using System.Configuration;
 
 namespace FinBourne.LUSIDCaching.Service
 {
@@ -33,6 +34,10 @@ namespace FinBourne.LUSIDCaching.Service
 
             XmlConfigurator.Configure(new FileInfo("log4net.config"));
 
+            // Last minute add to read from the app settings config file
+            var cacheLimit = ConfigurationManager.AppSettings["CacheLimit"];
+            if(!string.IsNullOrEmpty(cacheLimit))
+                LusidDynamicCache.Configure(int.Parse(cacheLimit));
 
             var firstItem = LusidDynamicCache.AddItem("First", "First", a =>
             {
